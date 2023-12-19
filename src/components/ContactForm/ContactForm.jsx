@@ -1,48 +1,57 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { Form, AddBtn, Label, Input } from './ContactForm.styled';
-import { nanoid } from 'nanoid';
-class ContactForm extends Component {
-  state = {
-    id: nanoid(),
-    name: '',
-    number: '',
-  };
-  handleSubmit = e => {
+
+const ContactForm = ({ onSubmit }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state);
-    this.setState({ name: '', number: '', id: nanoid() });
+    const data = { name, number };
+    onSubmit(data);
   };
 
-  hendleChange = e => {
+  const hendleChange = e => {
     const { value, name } = e.currentTarget;
-    this.setState({ [name]: value });
+    switch (name) {
+      case 'name':
+        setName(value);
+
+        break;
+      case 'number':
+        setNumber(value);
+
+        break;
+      default:
+        break;
+    }
   };
-  render() {
-    return (
-      <Form onSubmit={this.handleSubmit}>
-        <Label>
-          Name
-          <Input
-            type="text"
-            name="name"
-            required
-            value={this.state.name}
-            onChange={this.hendleChange}
-          />
-        </Label>
-        <Label>
-          Number
-          <Input
-            type="tel"
-            name="number"
-            required
-            value={this.state.number}
-            onChange={this.hendleChange}
-          />
-        </Label>
-        <AddBtn type="submit">Add contact</AddBtn>
-      </Form>
-    );
-  }
-}
+  // render() {
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Label>
+        Name
+        <Input
+          type="text"
+          name="name"
+          required
+          value={name}
+          onChange={hendleChange}
+        />
+      </Label>
+      <Label>
+        Number
+        <Input
+          type="tel"
+          name="number"
+          required
+          value={number}
+          onChange={hendleChange}
+        />
+      </Label>
+      <AddBtn type="submit">Add contact</AddBtn>
+    </Form>
+  );
+};
+
 export default ContactForm;
